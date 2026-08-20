@@ -9,5 +9,5 @@ public class LovaN2AllanApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(LovaN2AllanApplication.class, args);
 	}
-
+	
 }
