@@ -1,10 +1,12 @@
 package dao;
 
+import lombok.Data;
 import model.CashFlow;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+@Data
 
 public class CashFlowDAO {
 
@@ -36,6 +38,30 @@ public class CashFlowDAO {
         }
 
         return null;
+    }
+
+    public List<CashFlow> findAll() throws SQLException {
+
+        String sql = """
+            SELECT
+                id,
+                created_at,
+                amount
+            FROM cash_flows
+            ORDER BY created_at DESC
+            """;
+
+        List<CashFlow> cashFlows = new ArrayList<>();
+
+        try (PreparedStatement statement = connection.prepareStatement(sql);
+             ResultSet resultSet = statement.executeQuery()) {
+
+            while (resultSet.next()) {
+                cashFlows.add(mapCashFlow(resultSet));
+            }
+        }
+
+        return cashFlows;
     }
 
     // READ - tous les CashFlow d'un utilisateur

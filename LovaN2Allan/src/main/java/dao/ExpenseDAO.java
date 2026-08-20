@@ -151,6 +151,33 @@ public class ExpenseDAO {
         return expenses;
     }
 
+    public List<Expense> findAll() throws SQLException {
+
+        String sql = """
+            SELECT
+                cf.id,
+                cf.created_at,
+                cf.amount,
+                e.reason,
+                e.frequency
+            FROM cash_flows cf
+            INNER JOIN expenses e ON e.id = cf.id
+            ORDER BY cf.created_at DESC
+            """;
+
+        List<Expense> expenses = new ArrayList<>();
+
+        try (PreparedStatement statement = connection.prepareStatement(sql);
+             ResultSet resultSet = statement.executeQuery()) {
+
+            while (resultSet.next()) {
+                expenses.add(mapExpense(resultSet));
+            }
+        }
+
+        return expenses;
+    }
+
     // UPDATE
     public void update(Expense expense) throws SQLException {
 
