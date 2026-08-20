@@ -144,6 +144,32 @@ public class DonationDAO {
         return donations;
     }
 
+    public List<Donation> findAll() throws SQLException {
+
+        String sql = """
+            SELECT
+                cf.id,
+                cf.created_at,
+                cf.amount,
+                d.comment
+            FROM cash_flows cf
+            INNER JOIN donations d ON d.id = cf.id
+            ORDER BY cf.created_at DESC
+            """;
+
+        List<Donation> donations = new ArrayList<>();
+
+        try (PreparedStatement statement = connection.prepareStatement(sql);
+             ResultSet resultSet = statement.executeQuery()) {
+
+            while (resultSet.next()) {
+                donations.add(mapDonation(resultSet));
+            }
+        }
+
+        return donations;
+    }
+
     // UPDATE
     public void update(Donation donation) throws SQLException {
 
